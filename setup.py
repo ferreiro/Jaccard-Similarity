@@ -17,5 +17,5 @@ setup(
     description=('Command line application to recommend products',
                  'based on Jaccard similarity'),
     license='MIT',
-    packages=[]
+    packages=['nose']
 )
