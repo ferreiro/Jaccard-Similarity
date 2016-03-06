@@ -21,6 +21,7 @@ class Client(object):
 
     def __init__(self, name='', recurrency='low', fav_category=''):
         self.name = name
+        self.products_probabilities = [] # Each index is for each product type
         self.purchases_number = 0  # Number of sold products
         self.fav_category = fav_category
         self.recurrency = recurrency
@@ -28,6 +29,9 @@ class Client(object):
     # GETTERS
     def get_purchases_number(self):
         return self.purchases_number
+
+    def get_recurrency(self):
+        return self.recurrency
 
     # METHODS
     def get_recurrency_num(self, key, recurrency_dict):
@@ -45,7 +49,7 @@ class Client(object):
 
         self.purchases_number = total_purchases
 
-    def buy_products(self, client_fav_category):
+    def set_products_probability(self, client_fav_category):
         """
         Return a list containing probabilities
         that the client buy products from each category.
@@ -71,8 +75,16 @@ class Client(object):
 
         return products
 
-    def generate_random_information(self, recurrency, fav_category):
-        pass
-
     # def is_valid_recurrency(self, recurrency, valid_recurrencies_dict):
     #     return recurrency in valid_recurrencies_dict
+
+    def generate_random_information(self, recurrency_key, client_fav_category):
+
+        self.set_random_purchases_number(recurrency_key)
+
+        recurrency_number = self.get_recurrency_num(
+            recurrency_key, CLIENT_RECURRENCY_FACTOR
+        )
+
+        p_prob = self.set_products_probability(recurrency_number)
+        self.products_probabilities = p_prob

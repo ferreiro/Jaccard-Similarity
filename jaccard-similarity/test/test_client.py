@@ -10,7 +10,7 @@ class Client_tests(unittest.TestCase):
 
     def test_client_buy_products_top_category_is_the_maximum(self):
         top_category = 2
-        products = self.c.buy_products(top_category)
+        products = self.c.set_products_probability(top_category)
         max_category = np.argmax(products)
 
         self.assertEqual(max_category, top_category)
@@ -21,7 +21,7 @@ class Client_tests(unittest.TestCase):
 
         for index in indexes_not_valid:
             top_category = index
-            products = self.c.buy_products(top_category)
+            products = self.c.set_products_probability(top_category)
             products_min = min(products)
             products_max = max(products)
             self.assertEqual(products_min, products_max)
@@ -72,6 +72,13 @@ class Client_tests(unittest.TestCase):
         after_purchases_number = self.c.get_purchases_number()
 
         self.assertEqual(previous_purchases_number, after_purchases_number)
+
+    def test_client_generate_random_information_correctly(self):
+        # TODO: make a test to check that this function calls
+        # - set_random_purchases_number
+        # - buy_products
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
