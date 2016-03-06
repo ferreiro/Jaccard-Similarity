@@ -4,14 +4,14 @@ from Product import Product
 from Variables import Variables
 from Client import Client
 
-constVars = Variables()
+const_vars = Variables()
 
 class Store(object):
 
     def __init__(
         self,
-        products=([None] * constVars.N_PRODUCTS()),
-        clients=([None] * constVars.M_CLIENTS())
+        products=([None] * const_vars.N_PRODUCTS()),
+        clients=([None] * const_vars.M_CLIENTS())
     ):
         self.products = products
         self.clients = clients
@@ -36,11 +36,11 @@ class Store(object):
         left = 0
         offset = 0
         client_index = 0
-        clients = [None] * constVars.M_CLIENTS()
+        clients = [None] * const_vars.M_CLIENTS()
 
-        for cat_name, cat_probability in constVars.CLIENTS_PROBABILITIES().iteritems():
+        for cat_name, cat_probability in const_vars.CLIENTS_PROBABILITIES().iteritems():
 
-            clients_for_this_category = int(constVars.M_CLIENTS() * cat_probability)
+            clients_for_this_category = int(const_vars.M_CLIENTS() * cat_probability)
             left = offset
             offset = (left + clients_for_this_category)
 
@@ -56,10 +56,10 @@ class Store(object):
         left = 0
         offset = 0
         product_index = 0
-        products = [None] * constVars.N_PRODUCTS()
-        products_per_category = int(constVars.N_PRODUCTS() / constVars.TOTAL_CATEGORIES())
+        products = [None] * const_vars.N_PRODUCTS()
+        products_per_category = int(const_vars.N_PRODUCTS() / const_vars.TOTAL_CATEGORIES())
 
-        for cat_name, cat_probability in constVars.CATEGORIES().iteritems():
+        for cat_name, cat_probability in const_vars.CATEGORIES().iteritems():
 
             products_for_this_category = products_per_category
             left = offset

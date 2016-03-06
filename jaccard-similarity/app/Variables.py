@@ -13,6 +13,7 @@ class Variables(object):
             "politic": 4
         }
         self.total_categories = len(self.categories)
+        self.max_client_purchases = 10
         self.clients_probabilities = {
             # This must be 1 at total
             # Used when generating the number of clients
@@ -22,6 +23,16 @@ class Variables(object):
             "informatic": 0.4,
             "politic": 0.1
         }
+        self.screen_size = 80
+        self.client_recurrency_factor = {
+            'low': 1,
+            'medium': 1,
+            'high': 4
+        }
+        self.commun_probability = 10
+        self.top_probability = 30
+
+
 
     def N_PRODUCTS(self):
         return self.n_products
@@ -37,3 +48,28 @@ class Variables(object):
 
     def CLIENTS_PROBABILITIES(self):
         return self.clients_probabilities
+
+    def MAX_ALLOWED_PURCHASES(self):
+        return self.max_client_purchases
+
+    def SCREEN_SIZE(self):
+        return self.screen_size
+
+    def CLIENT_RECURRENCY_FACTOR(self):
+        # Constant Dictionary where the value (right element)
+        # is the factor by we multiply the number of random purchases
+        # make by the user when calculating the number of purchases
+        return self.client_recurrency_factor
+
+    def COMMUN_PROBABILITY(self):
+        # Constant Dictionary where the value (right element)
+        # is the factor by we multiply the number of random purchases
+        # make by the user when calculating the number of purchases
+        return self.commun_probability
+
+
+    def TOP_PROBABILITY(self):
+        # Constant Dictionary where the value (right element)
+        # is the factor by we multiply the number of random purchases
+        # make by the user when calculating the number of purchases
+        return self.top_probability

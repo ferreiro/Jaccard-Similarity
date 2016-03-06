@@ -1,26 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import random
-from random import choice, randint
-from Category import Category
+from random import randint
+from Variables import Variables
 
-category = Category()
-AVAILABLE_CATEGORIES = category.CATEGORIES()
-N_CATEGORIES = category.N_CATEGORIES()
-
-MAX_BOUGHT_PRODUCTS = 10
-BASE_PROBABILITY = 10
-TOP_PROBABILITY = 30
-SCREEN_SIZE = 80
-
-# Constant Dictionary where the value (right element)
-# is the factor by we multiply the number of random purchases
-# make by the user when calculating the number of purchases
-CLIENT_RECURRENCY_FACTOR = {
-    'low': 1,
-    'medium': 2,
-    'high': 4
-}
+const_vars = Variables()
 
 
 class Client(object):
@@ -47,7 +31,7 @@ class Client(object):
 
     def to_str(self):
         client_str = "\n"
-        client_str += "-" * SCREEN_SIZE
+        client_str += "-" * const_vars.SCREEN_SIZE()
         client_str += "\n\tName: " + self.name
         client_str += "\n\tRecurrency: " + self.recurrency
         client_str += "\n\tProbabilities: " + str(self.categories_probability)
@@ -55,7 +39,7 @@ class Client(object):
         client_str += "\n\tFavorite Category: " + str(self.favorite_category)
 
         # Print the rest of categories from most probability to bottom
-        for i in range(0, N_CATEGORIES):
+        for i in range(0, const_vars.TOTAL_CATEGORIES()):
             client_str += "\n\tGet probability for this category"
 
         return client_str
@@ -67,17 +51,17 @@ class Client(object):
             return 0
 
     def set_random_recurrency(self):
-        self.recurrency = random.choice(CLIENT_RECURRENCY_FACTOR.keys())
+        self.recurrency = random.choice(const_vars.CLIENT_RECURRENCY_FACTOR().keys())
 
     def set_random_purchases_number(self, recurrency_key):
-        random_purchases_num = randint(1, MAX_BOUGHT_PRODUCTS-1)
+        random_purchases_num = randint(1, const_vars.MAX_ALLOWED_PURCHASES()/2)
         increase_purchases_by_factor = self.get_recurrency_num(
-            recurrency_key, CLIENT_RECURRENCY_FACTOR)
+            recurrency_key, const_vars.CLIENT_RECURRENCY_FACTOR())
 
         total_purchases = random_purchases_num * increase_purchases_by_factor
 
-        if total_purchases >= MAX_BOUGHT_PRODUCTS:
-            total_purchases = MAX_BOUGHT_PRODUCTS
+        if total_purchases >= const_vars.MAX_ALLOWED_PURCHASES():
+            total_purchases = const_vars.MAX_ALLOWED_PURCHASES()
 
         self.purchases_number = total_purchases
 
@@ -89,22 +73,22 @@ class Client(object):
 
         When the parameter "favourite_category" is provided,
         the user will increase the probability for that particular category
-        by a constant factor "TOP_PROBABILITY"
+        by a constant factor "const_vars.TOP_PROBABILITY()"
         """
-        total = BASE_PROBABILITY * N_CATEGORIES
-        categories_probability = [0] * N_CATEGORIES
+        total = const_vars.COMMUN_PROBABILITY() * const_vars.TOTAL_CATEGORIES()
+        categories_probability = [0] * const_vars.TOTAL_CATEGORIES()
 
-        for i in range(0, N_CATEGORIES):
-            categories_probability[i] = BASE_PROBABILITY
+        for i in range(0, const_vars.TOTAL_CATEGORIES()):
+            categories_probability[i] = const_vars.COMMUN_PROBABILITY()
 
         if favourite_category in categories:
             # When Client index is valid, add extra value to that category
             top_cat_index = categories[favourite_category]
-            total += TOP_PROBABILITY
-            categories_probability[top_cat_index] += TOP_PROBABILITY
+            total += const_vars.TOP_PROBABILITY()
+            categories_probability[top_cat_index] += const_vars.TOP_PROBABILITY()
 
         # Converting values into probabilities
-        for i in range(0, N_CATEGORIES):
+        for i in range(0, const_vars.TOTAL_CATEGORIES()):
             categories_probability[i] /= float(total)
 
         self.categories_probability = categories_probability
@@ -119,7 +103,7 @@ class Client(object):
 
         self.set_random_categories_probability(
             favourite_category,
-            AVAILABLE_CATEGORIES)
+            const_vars.CATEGORIES())
 
     def generate_information(self):
         recurrency_key = self.recurrency
@@ -140,8 +124,11 @@ def __test():
 
     print info
 
-    p2 = Client('Jorge', 'medium', 'love')
+    p2 = Client('Jorge', 'medium', 'sport')
     p2.generate_information()
     info = p2.to_str()
 
     print info
+
+
+__test()
