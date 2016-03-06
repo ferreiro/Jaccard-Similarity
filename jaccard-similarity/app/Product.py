@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-LINES=40
+LINES = 40
+
 
 class Product(object):
 
-    def __init__(self, name, product_type="film"):
+    def __init__(self, name, product_type=""):
         self.name = name
         self.product_type = product_type
 

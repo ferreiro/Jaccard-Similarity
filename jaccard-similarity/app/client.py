@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from random import randint
+import random
+from random import choice, randint
 from Category import Category
 
 category = Category()
-AVAILABLE_CATEGORIES = category.get_categories()
-N_CATEGORIES = category.get_categories_length()
+AVAILABLE_CATEGORIES = category.CATEGORIES()
+N_CATEGORIES = category.N_CATEGORIES()
 
+MAX_BOUGHT_PRODUCTS = 10
 BASE_PROBABILITY = 10
 TOP_PROBABILITY = 30
-MAX_BOUGHT_PRODUCTS = 6
 SCREEN_SIZE = 80
 
 # Constant Dictionary where the value (right element)
@@ -65,12 +66,18 @@ class Client(object):
         else:
             return 0
 
+    def set_random_recurrency(self):
+        self.recurrency = random.choice(CLIENT_RECURRENCY_FACTOR.keys())
+
     def set_random_purchases_number(self, recurrency_key):
         random_purchases_num = randint(1, MAX_BOUGHT_PRODUCTS-1)
         increase_purchases_by_factor = self.get_recurrency_num(
             recurrency_key, CLIENT_RECURRENCY_FACTOR)
 
         total_purchases = random_purchases_num * increase_purchases_by_factor
+
+        if total_purchases >= MAX_BOUGHT_PRODUCTS:
+            total_purchases = MAX_BOUGHT_PRODUCTS
 
         self.purchases_number = total_purchases
 
@@ -105,6 +112,8 @@ class Client(object):
 
     def generate_random_information(self, recurrency_key, favourite_category):
 
+        self.set_random_recurrency()
+
         self.set_random_purchases_number(
             recurrency_key)
 
@@ -118,20 +127,21 @@ class Client(object):
         self.generate_random_information(recurrency_key, favourite_category)
 
 
-p1 = Client('Jorge', 'low', 'love')
-p1.generate_information()
-info = p1.to_str()
+def __test():
+    p1 = Client('Jorge', 'low', 'love')
+    p1.generate_information()
+    info = p1.to_str()
 
-print info
+    print info
 
-p2 = Client('Jorge', 'high', 'love')
-p2.generate_information()
-info = p2.to_str()
+    p2 = Client('Jorge', 'high', 'love')
+    p2.generate_information()
+    info = p2.to_str()
 
-print info
+    print info
 
-p2 = Client('Jorge', 'medium', 'love')
-p2.generate_information()
-info = p2.to_str()
+    p2 = Client('Jorge', 'medium', 'love')
+    p2.generate_information()
+    info = p2.to_str()
 
-print info
+    print info
