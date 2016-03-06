@@ -8,47 +8,62 @@ class Client_tests(unittest.TestCase):
     def setUp(self):
         self.c = Client()
 
-    def test_client_top_category_is_the_maximum_probability(self):
+    def test_client_categories_probability_set_after_calling_function(self):
+        c1 = Client()
+
+        favourite_category = 'love'
         categories = {
             "film": 0,
             "love": 1,
             "cooking": 2
         }
-        client_fav_category = 'cooking'
-        category_index = 2
 
-        categories_probability = self.c.set_random_categories_probability(
-            client_fav_category, categories)
+        previous_categories = c1.get_categories_probability()
+        c1.set_random_categories_probability(favourite_category, categories)
+        after_categories = c1.get_categories_probability()
 
+        self.assertNotEqual(previous_categories, after_categories)
+
+    def test_client_favorite_category_is_the_maximum_probability(self):
+        c1 = Client()
+
+        categories = {
+            "film": 0,
+            "love": 1,
+            "cooking": 2,
+            "boxing": 4
+        }
+
+        fav_category_key = 'cooking'
+        fav_category_index = categories[fav_category_key]
+
+        c1.set_random_categories_probability(fav_category_key, categories)
+
+        categories_probability = c1.get_categories_probability()
         max_category_index = np.argmax(categories_probability)
-        self.assertEqual(category_index, max_category_index)
 
-    def test_client_all_categories_has_same_value_when_favorite_not_valid(self):
+        self.assertEqual(fav_category_index, max_category_index)
+
+    def test_client_all_categories_same_probability_when_not_valid_cat(self):
+        c1 = Client()
+
         categories = {
             "film": 0,
             "love": 1,
-            "cooking": 2
+            "cooking": 2,
+            "boxing": 4
         }
-        client_fav_category = 'sdflkasjdlfkjsdlkfjsadlfkjasdlkfjsd'
 
-        categories_probability = self.c.set_random_categories_probability(
-            client_fav_category, categories)
+        wrong_keys = ('asbsabs', 2323)
 
-        cats_min = min(categories_probability)
-        cats_max = max(categories_probability)
-
-        self.assertEqual(cats_min, cats_max)
-
-    # def test_client_categories_probability_all_same_values_when_not_valid_index(self):
-    #
-    #     indexes_not_valid = (-1, None, "fskdfjsdlfjsd")
-    #
-    #     for index in indexes_not_valid:
-    #         top_category = index
-    #         products = self.c.set_products_probability(top_category)
-    #         products_min = min(products)
-    #         products_max = max(products)
-    #         self.assertEqual(products_min, products_max)
+        # When the key is not valid. We assign to all the categories
+        # the same probability
+        for key in wrong_keys:
+            c1.set_random_categories_probability(key, categories)
+            categories_probability = c1.get_categories_probability()
+            min_probability_value = min(categories_probability)
+            max_probability_value = min(categories_probability)
+            self.assertEqual(min_probability_value, max_probability_value)
 
     def test_client_recurrency_converts_str_to_int(self):
         recurrency = {
