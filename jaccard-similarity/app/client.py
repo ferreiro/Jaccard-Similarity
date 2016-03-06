@@ -5,8 +5,8 @@ from Category import Category
 
 category = Category()
 AVAILABLE_CATEGORIES = category.get_categories()
+N_CATEGORIES = category.get_categories_length()
 
-N_CATEGORIES = 5
 BASE_PROBABILITY = 10
 TOP_PROBABILITY = 30
 MAX_BOUGHT_PRODUCTS = 6
