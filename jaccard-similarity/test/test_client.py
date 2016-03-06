@@ -83,18 +83,6 @@ class Client_tests(unittest.TestCase):
         for key in not_valid_keys:
             vol_num = self.c.get_recurrency_num(key, recurrency)
             self.assertEqual(vol_num, 0)
-    #
-    # def test_client_returns_false_when_not_valid_recurrency_name(self):
-    #     wrong_recurrencies = ('fdsfsdfd', 'highhigh', 34343, None)
-    #     valid_recurrency_dict = {
-    #         'low': 1,
-    #         'medium': 2,
-    #         'high': 3
-    #     }
-    #
-    #     for value in wrong_recurrencies:
-    #         valid = self.c.is_valid_recurrency(value, valid_recurrency_dict)
-    #         self.assertEqual(valid, False)
 
     def test_client_number_of_products_updated_when_valid_recurrency(self):
         recurrency_key = 'high'

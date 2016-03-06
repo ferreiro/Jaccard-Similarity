@@ -4,10 +4,14 @@ CATEGORIES = {
     "cooking": 2
 }
 
+
 """
 Singlenton Class
 """
 class Category(object):
+
+    def get_categories(self):
+        return CATEGORIES
 
     def get_category_number(self, category_str):
         if category_str in CATEGORIES:
