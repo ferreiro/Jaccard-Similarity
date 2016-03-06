@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from app.client import Client
+from app.Client import Client
 
 
 class Client_tests(unittest.TestCase):
