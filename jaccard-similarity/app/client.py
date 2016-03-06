@@ -21,7 +21,7 @@ class Client(object):
 
     def __init__(self, name='', recurrency='low', fav_category=''):
         self.name = name
-        self.products_probabilities = [] # Each index is for each product type
+        self.products_probabilities = []  # Each index is for each product type
         self.purchases_number = 0  # Number of sold products
         self.fav_category = fav_category
         self.recurrency = recurrency
@@ -49,7 +49,7 @@ class Client(object):
 
         self.purchases_number = total_purchases
 
-    def set_products_probability(self, client_fav_category):
+    def set_random_categories_probability(self, client_fav_category, categories):
         """
         Return a list containing probabilities
         that the client buy products from each category.
@@ -58,14 +58,13 @@ class Client(object):
         """
         total = BASE_PROBABILITY * N_CATEGORIES
         products = [0] * N_CATEGORIES
-        top_cat_index = client_fav_category
 
         for i in range(0, N_CATEGORIES):
             products[i] = BASE_PROBABILITY
 
-        if (top_cat_index >= 0 and top_cat_index <= len(products)-1 and
-                isinstance(top_cat_index, int)):
+        if client_fav_category in categories:
             # When Client index is valid, add extra value to that category
+            top_cat_index = categories[client_fav_category]
             total += TOP_PROBABILITY
             products[top_cat_index] += TOP_PROBABILITY
 
@@ -86,5 +85,5 @@ class Client(object):
             recurrency_key, CLIENT_RECURRENCY_FACTOR
         )
 
-        p_prob = self.set_products_probability(recurrency_number)
+        p_prob = self.set_random_categories_probability('love')
         self.products_probabilities = p_prob

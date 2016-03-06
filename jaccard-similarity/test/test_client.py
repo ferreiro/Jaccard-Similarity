@@ -8,23 +8,47 @@ class Client_tests(unittest.TestCase):
     def setUp(self):
         self.c = Client()
 
-    def test_client_buy_products_top_category_is_the_maximum(self):
-        top_category = 2
-        products = self.c.set_products_probability(top_category)
-        max_category = np.argmax(products)
+    def test_client_top_category_is_the_maximum_probability(self):
+        categories = {
+            "film": 0,
+            "love": 1,
+            "cooking": 2
+        }
+        client_fav_category = 'cooking'
+        category_index = 2
 
-        self.assertEqual(max_category, top_category)
+        categories_probability = self.c.set_random_categories_probability(
+            client_fav_category, categories)
 
-    def test_client_buy_products_all_same_values_when_not_valid_index(self):
+        max_category_index = np.argmax(categories_probability)
+        self.assertEqual(category_index, max_category_index)
 
-        indexes_not_valid = (-1, None, "fskdfjsdlfjsd")
+    def test_client_all_categories_has_same_value_when_favorite_not_valid(self):
+        categories = {
+            "film": 0,
+            "love": 1,
+            "cooking": 2
+        }
+        client_fav_category = 'sdflkasjdlfkjsdlkfjsadlfkjasdlkfjsd'
 
-        for index in indexes_not_valid:
-            top_category = index
-            products = self.c.set_products_probability(top_category)
-            products_min = min(products)
-            products_max = max(products)
-            self.assertEqual(products_min, products_max)
+        categories_probability = self.c.set_random_categories_probability(
+            client_fav_category, categories)
+
+        cats_min = min(categories_probability)
+        cats_max = max(categories_probability)
+
+        self.assertEqual(cats_min, cats_max)
+
+    # def test_client_categories_probability_all_same_values_when_not_valid_index(self):
+    #
+    #     indexes_not_valid = (-1, None, "fskdfjsdlfjsd")
+    #
+    #     for index in indexes_not_valid:
+    #         top_category = index
+    #         products = self.c.set_products_probability(top_category)
+    #         products_min = min(products)
+    #         products_max = max(products)
+    #         self.assertEqual(products_min, products_max)
 
     def test_client_recurrency_converts_str_to_int(self):
         recurrency = {
@@ -76,7 +100,7 @@ class Client_tests(unittest.TestCase):
     def test_client_generate_random_information_correctly(self):
         # TODO: make a test to check that this function calls
         # - set_random_purchases_number
-        # - buy_products
+        # - categories_probability
         pass
 
 
