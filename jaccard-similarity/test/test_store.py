@@ -108,3 +108,37 @@ class TestStoreClass(unittest.TestCase):
 
         for row in store_matrix:
             self.assertTrue(len(row) > 0 and isinstance(row, list))
+    #
+    # def test_store_calculate_distance(self):
+    #     n_products = 2
+    #     m_clients = 4
+    #     s1 = Store(n_products, m_clients)
+    #
+    #     columnA = [0, 1, 0, 1] # Product Column
+    #     columnB = [1, 0, 0, 1] # Product Column
+    #
+    #     union = 3
+    #     intersection = 1
+    #
+    #     distance_result = intersection / float(union)
+    #     distance = s1.calculate_distance(columnA, columnB)
+    #
+    #     self.assertEqual(distance, distance_result)
+    #
+    # def test_store_calculate_related_products(self):
+    #     n_products = 2
+    #     m_clients = 4
+    #     s1 = Store(n_products, m_clients)
+    #     related = []
+    #
+    #     product1 = [1, 1, 1, 1]
+    #     product2 = [0, 0, 0, 1]
+    #     product3 = [1, 1, 1, 1]
+    #
+    #     product_column = 0
+    #
+    #     store_matrix = [ product1, product2, product3 ]
+    #     related = s1.get_related_products(product_column, store_matrix)
+    #
+    #     max_product = max(related)
+    #     assertEqual()

@@ -16,7 +16,6 @@ class Client(object):
         self.recurrency = recurrency
 
     # GETTERS
-
     def get_purchases_number(self):
         return self.purchases_number
 

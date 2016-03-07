@@ -5,6 +5,7 @@ from Variables import Variables
 from Client import Client
 from random import randint
 import numpy as np
+from operator import itemgetter
 
 const_vars = Variables()
 
@@ -148,6 +149,166 @@ class Store(object):
 
         return store_matrix
 
+    def calculate_distance(self, store_matrix, rows, columnA, columnB):
+        """
+        Given a matrix, calculates the distante between 2 columns,
+        applying the jaccard distance
+        """
+        distance = 0
+
+        union = 0
+        intersection = 0
+
+        for i in range(0, rows):
+            if store_matrix[i][columnA] == 1 and store_matrix[i][columnB] == 1:
+                intersection += 1
+            if store_matrix[i][columnA] == 1 or store_matrix[i][columnB] == 1:
+                union += 1
+
+        if union == intersection:
+            return 0.0
+        else:
+            distance = intersection / float(union)
+            return distance
+    #
+    # # Public method
+    # def get_related_products(self):
+    #     def calculate_related_products(store_matrix, rows, columns):
+    #         distances = {
+    #             # each key is the column index.
+    #             # and the value associate with that key,
+    #             # is the array of tuples (column, distanced) ordered from higher distance to lower.
+    #         }
+    #
+    #         print "[ Calculating related products... ]"
+    #
+    #         for currentColumn in range(0, columns):
+    #             A = currentColumn
+    #             A_related_products = []
+    #             for j in range(0, columns):
+    #                 if A != j:
+    #                     B = j
+    #                     distanceAB = self.calculate_distance(store_matrix, rows, A, B)
+    #                     column_distance = ( j, distanceAB )
+    #                     A_related_products.append(column_distance)
+    #             distances[currentColumn] = sorted(A_related_products,key=itemgetter(1), reverse=True)
+    #
+    #         print "[ Related products calculated. Thanks for your patience! ;) ]"
+    #         return distances
+    #
+    #     store_matrix = self.store_matrix
+    #     rows = self.m_clients
+    #     cols = self.n_products
+    #
+    #     if store_matrix == None:
+    #         return "Problems. The matrix is empty"
+    #
+    #     return calculate_related_products(store_matrix, rows, cols)
+    #
+    # def get_user_recommended_products(self, products_relation, user_index):
+    #
+    #     matrix = self.store_matrix
+    #     rows = self.m_clients
+    #     columns = self.n_products
+    #
+    #     debug = False
+    #
+    #     def get_pucharsed_product(user_index):
+    #         purchased_products = []
+    #         for c in range(0, columns):
+    #             if matrix[user_index][c] == 1:
+    #                 purchased_products.append(c) # add the column index
+    #
+    #         # print "\n\tPurchased products: " + str(purchased_products)
+    #         return purchased_products
+    #
+    #     # calculate related products for the user
+    #     purchased_list = get_pucharsed_product(user_index)
+    #     total_purchases = len(purchased_list)
+    #     products_to_recommend = {
+    #         # "product_index" : "distance"
+    #     }
+    #
+    #     for i in range(0, total_purchases):
+    #         product_column = purchased_list[i]
+    #         related_products_i = products_relation[product_column]
+    #
+    #         if debug: print "----------------"
+    #         if debug: print "Related products"
+    #         if debug: print "----------------"
+    #
+    #         if debug: print "\n"
+    #         if debug: print related_products_i
+    #         if debug: print "\n"
+    #
+    #         # traverse related products
+    #         for product in related_products_i:
+    #
+    #             if debug: print "\n- Product: " + str(product)
+    #
+    #             index_product = product[0]
+    #             product_distance_to_i = product[1]
+    #
+    #             if debug: print "\tIndex: " + str(index_product)
+    #             if debug: print "\tDistance to i: " + str(product_distance_to_i)
+    #
+    #             if index_product in purchased_list: # get tuple first element (product index)
+    #                 if debug: print "\t\t(YES) The user has purchased this object. So don't recommend it again"
+    #                 pass
+    #             else:
+    #
+    #                 if debug: print "\t\t(NOP) The user has not bought this product. we should recommend it"
+    #                 if debug: print "\t\t     Check if the product is on the final recommendation list"
+    #
+    #                 if index_product in products_to_recommend:
+    #                     if debug: print "\t\t\t(YES) The product is on the recommendation list."
+    #                     if debug: print "\t\t\t      Check if the current product has greater distance the that previous element"
+    #                     if product_distance_to_i > products_to_recommend[index_product]:
+    #                         if debug: print "\t\t\t\t(YES) New distance is greater than previous one."
+    #                         products_to_recommend[index_product] = product_distance_to_i
+    #                     else:
+    #                         if debug: print "\t\t\t\t(NOP) Previous distance is greater. So leave it."
+    #                 else:
+    #                     if debug: print "\t\t\t(NO) The product is NOT on the recommendation list. So add it"
+    #                     products_to_recommend[index_product] = product_distance_to_i
+    #             if debug: print "-------------------------"
+    #         if debug: print products_to_recommend
+    #         if debug: print "---"
+    #
+    #     convert_to_tuple = [(key, value) for key, value in products_to_recommend.iteritems()]
+    #     convert_to_tuple.sort(key=itemgetter(1), reverse=True) # higher distance first on the tuple
+    #
+    #     return convert_to_tuple
+    #
+    # def get_all_users_recommended_products(self):
+    #     users_recomendations = []
+    #
+    #     users = self.clients
+    #     products = self.products
+    #     n_users = len(users)
+    #     related_products = self.get_related_products()
+    #
+    #     for user_id in range(0, n_users):
+    #         recommended_products = self.get_user_recommended_products(
+    #             related_products, user_id)
+    #
+    #         print users[user_id].to_str()
+    #
+    #         showed_product = 0
+    #         for p in recommended_products:
+    #             if showed_product > 10:
+    #                 break
+    #
+    #             product_id = p[0]
+    #             product_probability = p[1]
+    #             print products[product_id].to_str()
+    #             showed_product += 1
+    #
+    #         #print recommended_products
+    #         users_recomendations.append(recommended_products)
+    #
+    #     return users_recomendations
+
     def init(self):
         """
         Creates products, clients and store_matrix.
@@ -161,12 +322,10 @@ class Store(object):
         self.clients = clients
         self.store_matrix = store_matrix
 
-        print store_matrix
-
-
 clients=10
 products=100
 
 s = Store(products, clients)
 s.init()
-print s.store_matrix
+# s.get_all_users_recommended_products()
+# print s.store_matrix
