@@ -1,11 +1,9 @@
+from Variables import Variables
 
-CATEGORIES = {
-   "sport": 0,
-   "science": 1,
-   "film": 2,
-   "informatic": 3,
-   "politic": 4
-}
+const_vars = Variables()
+
+
+CATEGORIES = const_vars.CATEGORIES()
 
 """
 Singlenton Class
