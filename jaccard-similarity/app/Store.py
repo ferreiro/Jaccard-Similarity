@@ -37,7 +37,7 @@ class Store(object):
         left = 0
         offset = 0
         client_index = 0
-        clients = [None] * m_clients
+        clients = []
 
         for cat_name, cat_probability in const_vars.CLIENTS_PROBABILITIES().iteritems():
 
@@ -48,7 +48,7 @@ class Store(object):
             for i in range(0, clients_for_this_category):
                 c = Client(name=str(client_index), favorite_category=cat_name)
                 c.generate_information()
-                clients[left+i] = c
+                clients.append(c)
                 client_index += 1
 
         return clients
@@ -63,7 +63,7 @@ class Store(object):
         left = 0
         offset = 0
         product_index = 0
-        products = [None] * n_products
+        products = []
         products_per_category = int(n_products / const_vars.TOTAL_CATEGORIES())
 
         for cat_name, cat_probability in const_vars.CATEGORIES().iteritems():
@@ -74,7 +74,7 @@ class Store(object):
 
             for i in range(0, products_for_this_category):
                 p = Product(name=str(product_index), product_type=cat_name)
-                products[left+i] = p
+                products.append(p)
                 product_index += 1
 
         return products
@@ -122,7 +122,7 @@ class Store(object):
 
         return products
 
-    def generate_store_matrix(self, n_products, m_clients):
+    def generate_store_matrix(self, products, clients):
         """
         Returns a Bidimensional matrix where rows are clients
         and columns are products. The matrix relates for each client,
@@ -132,11 +132,12 @@ class Store(object):
         1= Client i has bought product j
         0= Client i has not bought product j
         """
+        m_clients = len(clients)
+        n_products = len(products)
         store_matrix = [] # Bidimensional matrix
-        products = self.generate_products(n_products)
-        clients = self.generate_clients(m_clients)
 
         for client in clients:
+
             m_client_products = client.get_purchases_number()
             categories_probability = client.get_categories_probability()
 
@@ -152,16 +153,20 @@ class Store(object):
         Creates products, clients and store_matrix.
         This function sets each attribute for the object after calculated
         """
+        products = self.generate_products(self.n_products)
+        clients = self.generate_clients(self.m_clients)
+        store_matrix = self.generate_store_matrix(products, clients)
 
-
-        n_products = self.n_products
-        m_clients = self.m_clients
-
-        store_matrix = self.generate_store_matrix(n_products, m_clients)
+        self.products = products
+        self.clients = clients
         self.store_matrix = store_matrix
+
+        print store_matrix
+
 
 clients=10
 products=100
 
-s = Store(clients, products)
+s = Store(products, clients)
 s.init()
+print s.store_matrix

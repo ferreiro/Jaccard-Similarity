@@ -13,7 +13,8 @@ class Variables(object):
             "politic": 4
         }
         self.total_categories = len(self.categories)
-        self.max_client_purchases = 10
+        self.min_client_purchases = 10
+        self.max_client_purchases = 20
         self.clients_probabilities = {
             # This must be 1 at total
             # Used when generating the number of clients
@@ -48,6 +49,9 @@ class Variables(object):
 
     def CLIENTS_PROBABILITIES(self):
         return self.clients_probabilities
+
+    def MIN_ALLOWED_PURCHASES(self):
+        return self.min_client_purchases
 
     def MAX_ALLOWED_PURCHASES(self):
         return self.max_client_purchases

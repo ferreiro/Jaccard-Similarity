@@ -88,7 +88,10 @@ class TestStoreClass(unittest.TestCase):
         s1 = Store(n_products, m_clients)
         # clients_type = [0.2, 0.2, 0.2, 0.2, 0.2] # All the clients has the same type.
 
-        store_matrix = s1.generate_store_matrix(n_products, m_clients) #, clients_type)
+        products = s1.generate_products(n_products)
+        clients = s1.generate_clients(m_clients)
+
+        store_matrix = s1.generate_store_matrix(products, clients) #, clients_type)
 
         # Test matrix has changed (and filled)
         self.assertNotEqual(store_matrix, None)

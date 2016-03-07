@@ -3,7 +3,6 @@
 import random
 from random import randint
 from Variables import Variables
-
 const_vars = Variables()
 
 
@@ -54,7 +53,10 @@ class Client(object):
         self.recurrency = random.choice(const_vars.CLIENT_RECURRENCY_FACTOR().keys())
 
     def set_random_purchases_number(self, recurrency_key):
-        random_purchases_num = randint(1, const_vars.MAX_ALLOWED_PURCHASES()/2)
+        random_purchases_num = randint(
+            const_vars.MIN_ALLOWED_PURCHASES(),
+            const_vars.MAX_ALLOWED_PURCHASES())
+
         increase_purchases_by_factor = self.get_recurrency_num(
             recurrency_key, const_vars.CLIENT_RECURRENCY_FACTOR())
 
@@ -129,6 +131,3 @@ def __test():
     info = p2.to_str()
 
     print info
-
-
-# __test()

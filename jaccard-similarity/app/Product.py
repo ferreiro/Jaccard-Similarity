@@ -21,7 +21,7 @@ class Product(object):
 
     def to_str(self):
         product_str = "\n"
-        product_str += "\tProduct info: " + ("-" * LINES)
+        product_str += "\tProduct info: " # + ("-" * LINES)
         product_str += "\n\tName: " + str(self.name)
         product_str += "\n\tProduct type: " + str(self.product_type)
 
