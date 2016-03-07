@@ -8,6 +8,13 @@ class TestStoreClass(unittest.TestCase):
 
     def setUp(self):
         self.store = Store()
+    # TODO
+    # def test_store_creates_list_of_clients(self):
+    #     self.assertEqual(2, 0, "TODO: Creates a list of clients")
+    #
+    # TODO
+    # def test_store_creates_list_of_products(self):
+    #     self.assertEqual(2, 0, "TODO: Creates a list of products")
 
     def test_store_initialize_matrix_to_all_ceroes(self):
         self.store.initialize_empty_matrix()
@@ -16,23 +23,6 @@ class TestStoreClass(unittest.TestCase):
         matrix_full_of_zeroes = not np.any(store_matrix)
 
         self.assertEqual(matrix_full_of_zeroes, True)
-
-    def test_store_generate_correct_clients_type(self):
-        n_clients = 100
-
-        clients_type = {
-           "sport": 0.1,
-           "science": 0.1,
-           "film": 0.3,
-           "informatic": 0.4,
-           "politic": 0.1,
-           "love": 0
-        }
-
-        for key, value in clients_type.iteritems():
-
-            print key
-            print value
 
     def test_store_add_all_the_products_the_client_wants_to_buy(self):
         s1 = Store()
@@ -54,7 +44,7 @@ class TestStoreClass(unittest.TestCase):
 
         self.assertEqual(client_products, total_added_products)
 
-    def test_store_buy_all_products_for_each_category_correctly(self):
+    def test_store_fill_all_products_for_each_category_correctly(self):
         s1 = Store()
 
         shop_products = 100
@@ -81,3 +71,34 @@ class TestStoreClass(unittest.TestCase):
                     added_products += 1
                 # self.assertTrue(list_products[left+i] == 0)
             self.assertEqual(added_products, category_products)
+
+    def test_store_initialize_matrix(self):
+        """
+        Given a list of clients and products, generates a matrix
+        where each row contains is a list of ceroes and one's
+        of bought products by each client
+        """
+        s1 = Store()
+        m_clients = 10
+        n_products = 100
+        clients_type = [0.2, 0.2, 0.2, 0.2, 0.2] # All the clients has the same type.
+
+        matrix_before = s1.get_store_matrix()
+        s1.fill_store_matrix(n_products, m_clients, clients_type)
+        matrix_after = s1.get_store_matrix()
+
+        # Test matrix has changed (and filled)
+        self.assertNotEqual(matrix_before, matrix_after)
+
+        # Test dimensions of the new matrix
+        dimensions = np.shape(matrix_after)
+        aux_row = dimensions[0]
+        aux_col = dimensions[1]
+
+        self.assertEqual(aux_row, m_clients)
+        self.assertEqual(aux_col, n_products)
+
+        # Check that for each client, we have a list
+
+        for row in matrix_after:
+            self.assertTrue(len(row) > 0 and isinstance(row, list))

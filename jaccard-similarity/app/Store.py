@@ -4,6 +4,7 @@ from Product import Product
 from Variables import Variables
 from Client import Client
 from random import randint
+import numpy as np
 
 const_vars = Variables()
 
@@ -29,7 +30,7 @@ class Store(object):
         col = len(self.products)
         self.store_matrix = [[0 for c in range(col)] for r in range(row)]
 
-    def generate_clients(self):
+    def generate_clients(self, m_clients):
         """
         Generates a list of clients and set to clients attribute on class.
         It takes into account the probabilities from "CLIENTS_TYPE"
@@ -38,11 +39,11 @@ class Store(object):
         left = 0
         offset = 0
         client_index = 0
-        clients = [None] * const_vars.M_CLIENTS()
+        clients = [None] * m_clients
 
         for cat_name, cat_probability in const_vars.CLIENTS_PROBABILITIES().iteritems():
 
-            clients_for_this_category = int(const_vars.M_CLIENTS() * cat_probability)
+            clients_for_this_category = int(m_clients * cat_probability)
             left = offset
             offset = (left + clients_for_this_category)
 
@@ -52,9 +53,15 @@ class Store(object):
                 clients[left+i] = c
                 client_index += 1
 
-        self.clients = clients
+        return clients
 
     def generate_products(self):
+        """
+        Generates a list of products with different categories.
+        The number of products for each category is calculated taking into
+        account the CATEGORIES probability global variable. Where defines what
+        is the probability the system has clients for each category.
+        """
         left = 0
         offset = 0
         product_index = 0
@@ -72,11 +79,19 @@ class Store(object):
                 products[left+i] = p
                 product_index += 1
 
-        self.products = products
+        return products
 
 
     def buy_client_products(self,
         n_products, m_bought_products, categories_probability):
+        """
+        Generates a list of products bought by one client.
+        Each element in the list can be 1 (the client has bought the product)
+        or 0 (the client has not bought the product).
+        When generating the list, it's creates a random "purchases".
+        But if the client has bought all the products, don't make the random
+        stuff and fill all the products for that range
+        """
 
         left = 0
         offset = 0
@@ -110,19 +125,35 @@ class Store(object):
 
         return products
 
-    def fill_store_matrix(self):
-        """
-        When we have already the products and the clients,
-        We can start filling the matrix content.
-        So for each client, we have to generate products
-        inside each category, depending on the probabilities he has on
-        his profile
-        """
-        pass
+    def fill_store_matrix(self, n_products, m_clients, clients_type):
+        store_matrix = [] # Bidimensional matrix
+        clients = self.generate_clients(m_clients)
+        products = self.generate_products()
+
+        for client in clients:
+            m_bought_products = client.get_purchases_number()
+            categories_probability = client.get_categories_probability()
+
+            client_products = self.buy_client_products(
+                n_products, m_bought_products, categories_probability)
+
+            store_matrix.append(client_products)
+
+        self.store_matrix = store_matrix
+
+    # def fill_store_matrix(self):
+    #     """
+    #     When we have already the products and the clients,
+    #     We can start filling the matrix content.
+    #     So for each client, we have to generate products
+    #     inside each category, depending on the probabilities he has on
+    #     his profile
+    #     """
+    #     pass
 
 s = Store()
 s.initialize_empty_matrix()
-s.generate_clients()
+s.generate_clients(100)
 s.generate_products()
 print s.clients
 print s.products
