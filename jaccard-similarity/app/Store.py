@@ -11,14 +11,12 @@ const_vars = Variables()
 
 class Store(object):
 
-    def __init__(
-        self,
-        products=([None] * const_vars.N_PRODUCTS()),
-        clients=([None] * const_vars.M_CLIENTS())
-    ):
-        self.products = products
-        self.clients = clients
-        self.store_matrix = None
+    def __init__(self, n_products, m_clients):
+        self.n_products = n_products
+        self.m_clients = m_clients
+        self.store_matrix = None # Bidimensional matrix
+        self.products = []
+        self.clients = []
 
     # GETTERS
     def get_store_matrix(self):
@@ -55,7 +53,7 @@ class Store(object):
 
         return clients
 
-    def generate_products(self):
+    def generate_products(self, n_products):
         """
         Generates a list of products with different categories.
         The number of products for each category is calculated taking into
@@ -65,8 +63,8 @@ class Store(object):
         left = 0
         offset = 0
         product_index = 0
-        products = [None] * const_vars.N_PRODUCTS()
-        products_per_category = int(const_vars.N_PRODUCTS() / const_vars.TOTAL_CATEGORIES())
+        products = [None] * n_products
+        products_per_category = int(n_products / const_vars.TOTAL_CATEGORIES())
 
         for cat_name, cat_probability in const_vars.CATEGORIES().iteritems():
 
@@ -81,9 +79,8 @@ class Store(object):
 
         return products
 
-
     def buy_client_products(self,
-        n_products, m_bought_products, categories_probability):
+        n_products, m_client_products, categories_probability):
         """
         Generates a list of products bought by one client.
         Each element in the list can be 1 (the client has bought the product)
@@ -106,7 +103,7 @@ class Store(object):
             offset = left + products_per_category
 
             added_products = 0
-            total_products_to_add = int(probability * m_bought_products)
+            total_products_to_add = int(probability * m_client_products)
 
             if total_products_to_add >= products_per_category:
                 # The client has bought all the products for this category
@@ -125,35 +122,46 @@ class Store(object):
 
         return products
 
-    def fill_store_matrix(self, n_products, m_clients, clients_type):
+    def generate_store_matrix(self, n_products, m_clients):
+        """
+        Returns a Bidimensional matrix where rows are clients
+        and columns are products. The matrix relates for each client,
+        the products he has bought
+
+        Each element in the matrix can be 1 or 0.
+        1= Client i has bought product j
+        0= Client i has not bought product j
+        """
         store_matrix = [] # Bidimensional matrix
+        products = self.generate_products(n_products)
         clients = self.generate_clients(m_clients)
-        products = self.generate_products()
 
         for client in clients:
-            m_bought_products = client.get_purchases_number()
+            m_client_products = client.get_purchases_number()
             categories_probability = client.get_categories_probability()
 
-            client_products = self.buy_client_products(
-                n_products, m_bought_products, categories_probability)
+            client_products = self.buy_client_products(n_products,
+                m_client_products, categories_probability)
 
             store_matrix.append(client_products)
 
+        return store_matrix
+
+    def init(self):
+        """
+        Creates products, clients and store_matrix.
+        This function sets each attribute for the object after calculated
+        """
+
+
+        n_products = self.n_products
+        m_clients = self.m_clients
+
+        store_matrix = self.generate_store_matrix(n_products, m_clients)
         self.store_matrix = store_matrix
 
-    # def fill_store_matrix(self):
-    #     """
-    #     When we have already the products and the clients,
-    #     We can start filling the matrix content.
-    #     So for each client, we have to generate products
-    #     inside each category, depending on the probabilities he has on
-    #     his profile
-    #     """
-    #     pass
+clients=10
+products=100
 
-s = Store()
-s.initialize_empty_matrix()
-s.generate_clients(100)
-s.generate_products()
-print s.clients
-print s.products
+s = Store(clients, products)
+s.init()

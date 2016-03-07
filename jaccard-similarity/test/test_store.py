@@ -7,7 +7,9 @@ from app.Store import Store
 class TestStoreClass(unittest.TestCase):
 
     def setUp(self):
-        self.store = Store()
+        n_products = 100
+        m_clients = 10
+        self.store = Store(n_products, m_clients)
     # TODO
     # def test_store_creates_list_of_clients(self):
     #     self.assertEqual(2, 0, "TODO: Creates a list of clients")
@@ -25,40 +27,43 @@ class TestStoreClass(unittest.TestCase):
         self.assertEqual(matrix_full_of_zeroes, True)
 
     def test_store_add_all_the_products_the_client_wants_to_buy(self):
-        s1 = Store()
+        n_products = 100
+        m_clients = 10
 
-        shop_products = 100
+        s1 = Store(n_products, m_clients)
+
         client_products = 10 # client has bought 10 products
         category_probabilities = [0.2, 0.3, 0.2, 0.1, 0.2]
 
         list_products = s1.buy_client_products(
-            shop_products, client_products, category_probabilities)
+            n_products, client_products, category_probabilities)
 
         # Test that previous method has filled the list correctly
 
         total_added_products = 0
 
-        for col in range(0, shop_products):
+        for col in range(0, n_products):
             if list_products[col] == 1:
                 total_added_products += 1
 
         self.assertEqual(client_products, total_added_products)
 
     def test_store_fill_all_products_for_each_category_correctly(self):
-        s1 = Store()
+        n_products = 100
+        m_clients = 10
+        s1 = Store(n_products, m_clients)
 
-        shop_products = 100
         client_products = 10 # client has bought 10 products
         probabilities = [0.2, 0.3, 0.2, 0.1, 0.2]
         n_categories = len(probabilities)
 
         list_products = s1.buy_client_products(
-            shop_products, client_products, probabilities)
+            n_products, client_products, probabilities)
 
         # Check that the client has bought all the products for each category
         left = 0
         offset = 0
-        products_per_category = shop_products / n_categories
+        products_per_category = n_products / n_categories
 
 
         for probability in probabilities:
@@ -78,20 +83,18 @@ class TestStoreClass(unittest.TestCase):
         where each row contains is a list of ceroes and one's
         of bought products by each client
         """
-        s1 = Store()
-        m_clients = 10
         n_products = 100
-        clients_type = [0.2, 0.2, 0.2, 0.2, 0.2] # All the clients has the same type.
+        m_clients = 10
+        s1 = Store(n_products, m_clients)
+        # clients_type = [0.2, 0.2, 0.2, 0.2, 0.2] # All the clients has the same type.
 
-        matrix_before = s1.get_store_matrix()
-        s1.fill_store_matrix(n_products, m_clients, clients_type)
-        matrix_after = s1.get_store_matrix()
+        store_matrix = s1.generate_store_matrix(n_products, m_clients) #, clients_type)
 
         # Test matrix has changed (and filled)
-        self.assertNotEqual(matrix_before, matrix_after)
+        self.assertNotEqual(store_matrix, None)
 
         # Test dimensions of the new matrix
-        dimensions = np.shape(matrix_after)
+        dimensions = np.shape(store_matrix)
         aux_row = dimensions[0]
         aux_col = dimensions[1]
 
@@ -100,5 +103,5 @@ class TestStoreClass(unittest.TestCase):
 
         # Check that for each client, we have a list
 
-        for row in matrix_after:
+        for row in store_matrix:
             self.assertTrue(len(row) > 0 and isinstance(row, list))
